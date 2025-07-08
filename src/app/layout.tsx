@@ -1,9 +1,12 @@
- import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import Navbar from '../components/Navbar'
-import './globals.css'
+import './globals.css';
+import { Inter } from 'next/font/google';
+import { Metadata } from 'next';
+import Navbar from '../components/Navbar';
+import { Toaster } from 'react-hot-toast';
+import ClientLayout from './ClientLayout';
+import Footer from '@/components/Footer';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Trekwise – AI Trip Planner',
@@ -13,9 +16,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-white text-black">
-        <Navbar />
-        <main className="min-h-screen p-20">{children}</main>
+      <body className={`${inter.className} bg-white text-black`}>
+        <ClientLayout>
+          <Navbar />
+          <Toaster position="top-center" reverseOrder={false} />
+          <main className="min-h-screen p-20">{children}</main>
+          <Footer/>
+        </ClientLayout>
       </body>
     </html>
   );

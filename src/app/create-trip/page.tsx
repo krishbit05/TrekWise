@@ -1,10 +1,12 @@
 'use client';
-import { budgetOptions, groupOptions } from '@/src/constants/options'
-import LocationAutocomplete from '@/src/components/LocationAutocomplete';
-import { cn } from '@/src/lib/utils';
+import { budgetOptions, groupOptions } from '@/constants/options'
+import LocationAutocomplete from '@/components/LocationAutocomplete';
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
-
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useSession, signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function CreateTripPage() {
     const [location, setLocation] = useState('');
@@ -12,25 +14,47 @@ export default function CreateTripPage() {
     const [budget, setBudget] = useState('');
     const [group, setGroup] = useState('');
 
+    const { data: session } = useSession();
+    const router = useRouter();
 
     const getTravelPlan = async () => {
-      try {
-        const response = await axios.post('/api/trips', {
-          destination: location,
-          days: days,
-          budget: budget,
-          group: group,
-        });
-    
-        // The API returns a stringified JSON; parse it to use as an object
-        const travelData = JSON.parse(response.data.data);
-        console.log(travelData);
-        return travelData;
-      } catch (error: any) {
-        console.error('Failed to fetch travel plan:', error.response?.data || error.message);
-      }
+        if (!session) return signIn();
+
+        if (!location) return toast.error('Please select a destination');
+        if (!days || Number(days) <= 0) return toast.error('Please enter a valid number of days');
+        if (!budget) return toast.error('Please select a budget option');
+        if (!group) return toast.error('Please select your travel group');
+
+        try {
+            toast.loading('Generating your travel plan...');
+
+            const response = await axios.post('/api/trips', {
+                destination: location,
+                days,
+                budget,
+                group,
+            });
+
+            const travelData = response.data?.data;
+            if (!travelData) throw new Error('Empty data');
+
+            console.log('[TRAVEL DATA]', travelData);
+
+            toast.dismiss();
+            toast.success('Travel plan generated successfully!');
+            router.push('/view-trip');
+
+            return travelData;
+        } catch (error: any) {
+            toast.dismiss();
+            const errMsg = error.response?.data?.error || error.message || 'Unknown error';
+            console.error('Failed to fetch travel plan:', errMsg);
+            toast.error('Failed to fetch travel plan. Please try again.');
+        }
     };
-      
+
+
+
     return (
         <div className="max-w-5xl mx-auto p-6 flex flex-col gap-8">
             <div>

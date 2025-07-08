@@ -25,6 +25,14 @@ export default function Header() {
           Get Started, It&apos;s Free
         </Link>
       </div>
+      <div className="relative overflow-hidden mt-4 mb-48 px-4">
+        <img
+          src="/landing.png"
+          alt="Trekwise Screenshot"
+          className="mx-auto w-full max-w-6xl drop-shadow-xl rounded-lg"
+        />
+      </div>
+
     </header>
   );
 }
