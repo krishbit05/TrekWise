@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <link rel="shortcut icon" href="/logo.png" type="image/x-icon" />
       <body className={`${poppins.className} text-black`}>
         <div className="fixed inset-0 -z-10 bg-cover bg-center brightness-[0.5]"
-          style={{ backgroundImage: "url('/bg.jpg')" }}>
+          style={{ backgroundImage: "url('/bg.png')" }}>
         </div>
         <ClientLayout>
           <Navbar />
