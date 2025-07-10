@@ -10,12 +10,13 @@ const poppins = Poppins({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
 export const metadata: Metadata = {
   title: 'Trekwise – AI Trip Planner',
-  description: 'Plan smart, travel smarter.',
+  description: 'Plan smart, travel smarter.', 
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <link rel="shortcut icon" href="/logo.png" type="image/x-icon" />
       <body className={`${poppins.className} text-black`}>
         <div className="fixed inset-0 -z-10 bg-cover bg-center brightness-[0.5]"
           style={{ backgroundImage: "url('/bg.jpg')" }}>
