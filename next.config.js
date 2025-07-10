@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
-
-module.exports = nextConfig
+const nextConfig = {
+    transpilePackages: ['supports-color'],
+    experimental: {
+      esmExternals: 'loose',
+    },
+    reactStrictMode: true,
+  }
+  
+  module.exports = nextConfig;
+  
