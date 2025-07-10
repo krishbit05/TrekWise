@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 import axios from 'axios';
 
+const LOCATIONIQ_TOKEN = process.env.NEXT_PUBLIC_LOCATIONIQ_TOKEN!;
+
 export default function LocationAutocomplete({
   onSelect,
 }: {
@@ -16,8 +18,9 @@ export default function LocationAutocomplete({
     if (!search) return setResults([]);
 
     try {
-      const res = await axios.get('https://nominatim.openstreetmap.org/search', {
+      const res = await axios.get('https://us1.locationiq.com/v1/search.php', {
         params: {
+          key: LOCATIONIQ_TOKEN, 
           q: search,
           format: 'json',
           addressdetails: 1,
@@ -30,11 +33,10 @@ export default function LocationAutocomplete({
 
       setResults(res.data);
     } catch (error) {
-      console.error('Error fetching locations:', error);
+      console.error('Error fetching locations from LocationIQ:', error);
       setResults([]);
     }
-  };
-
+  }
   // Fetch when debounced input changes
   useEffect(() => {
     fetchLocations(debouncedQuery);
@@ -47,7 +49,7 @@ export default function LocationAutocomplete({
         value={query}
         placeholder="Enter location"
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full border px-4 py-2 rounded-md"
+        className="w-full border px-4 py-2 rounded-md bg-white/85 focus:outline-none focus:border-orange-500 placeholder:text-black/70"
       />
       {results.length > 0 && (
         <ul className="absolute left-0 right-0 bg-white shadow-md rounded mt-1 z-10 max-h-60 overflow-auto">

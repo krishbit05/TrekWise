@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Footer() {
   return (
-    <footer className="bg-orange-50 text-orange-900 border-t border-orange-200 mt-10">
+    <footer className="bg-orange-100 text-orange-900 border-t border-orange-200 mt-10">
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Brand Info */}
         <div>

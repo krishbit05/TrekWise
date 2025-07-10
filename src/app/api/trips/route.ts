@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     try {
       parsed = JSON.parse(cleaned);
     } catch (err) {
-      console.error('[JSON_PARSE_FAIL]', aiRaw);
+      console.error('[JSON_PARSE_FAIL]', cleaned);
       return NextResponse.json({ error: 'Invalid JSON from AI' }, { status: 500 });
     }
 

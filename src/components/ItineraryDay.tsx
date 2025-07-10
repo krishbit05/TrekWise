@@ -1,13 +1,11 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 
 type Activity = {
   placeName: string;
   placeDetails: string;
   imageUrl: string;
-  geoCoordinates: {
-    latitude: number;
-    longitude: number;
-  };
   ticketPricing: string;
   rating: number;
   timeToSpend: string;
@@ -16,6 +14,23 @@ type Activity = {
 
 const FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1504712598893-24159a89200e?q=80&w=2070&auto=format&fit=crop';
+
+const UNSPLASH_ACCESS_KEY = process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY;
+
+async function getUnsplashImage(query: string): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
+        query
+      )}&orientation=landscape&per_page=1&client_id=${UNSPLASH_ACCESS_KEY}`
+    );
+    const data = await res.json();
+    return data.results?.[0]?.urls?.regular || null;
+  } catch (err) {
+    console.error('Error fetching Unsplash image:', err);
+    return null;
+  }
+}
 
 export default function ItineraryDay({
   day,
@@ -26,21 +41,40 @@ export default function ItineraryDay({
   theme: string;
   dailyPlan: Activity[];
 }) {
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function loadImages() {
+      const imagePromises = dailyPlan.map(async (activity) => {
+        try {
+          const image = await getUnsplashImage(activity.placeName);
+          return image || FALLBACK_IMAGE;
+        } catch {
+          return FALLBACK_IMAGE;
+        }
+      });
+
+      const resolvedImages = await Promise.all(imagePromises);
+      setImages(resolvedImages);
+    }
+
+    loadImages();
+  }, [dailyPlan]);
+
   return (
     <div className="mb-12">
-      <h2 className="text-3xl font-bold text-orange-900 mb-2">📅 Day {day}</h2>
-      <p className="text-lg text-gray-700 font-medium mb-6">{theme}</p>
+      <h2 className="text-3xl font-bold text-orange-500 mb-2">Day {day}</h2>
+      <p className="text-lg text-white/80 font-medium mb-6">{theme}</p>
 
       <div className="space-y-6">
         {dailyPlan.map((activity, index) => {
-          const imageSrc = activity.imageUrl?.trim() ? activity.imageUrl : FALLBACK_IMAGE;
+          const imageSrc = images[index] || FALLBACK_IMAGE;
 
           return (
             <div
               key={index}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row border border-gray-200"
+              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow ease-in-out overflow-hidden flex flex-col md:flex-row border border-gray-200"
             >
-              {/* Image */}
               <div className="md:w-1/3 h-60 md:h-auto">
                 <img
                   src={imageSrc}

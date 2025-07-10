@@ -34,7 +34,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black to-orange-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black to-orange-900 px-4 rounded-xl">
       <div className="bg-white/10 backdrop-blur-lg border border-orange-400/30 shadow-2xl rounded-2xl p-10 w-full max-w-md text-white">
         <h1 className="text-3xl font-extrabold text-orange-400 mb-6 text-center">
           Welcome to Trekwise 🚀
