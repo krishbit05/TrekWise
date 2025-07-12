@@ -9,6 +9,7 @@ import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function CreateTripPage() {
+    const [loading, setLoading] = useState(false);
     const [location, setLocation] = useState('');
     const [days, setDays] = useState('');
     const [budget, setBudget] = useState('');
@@ -18,13 +19,14 @@ export default function CreateTripPage() {
     const router = useRouter();
 
     const getTravelPlan = async () => {
-        if (!session) return signIn();
-
+        
         if (!location) return toast.error('Please select a destination');
+        if (!session) return signIn();
         if (!days || Number(days) <= 0) return toast.error('Please enter a valid number of days');
         if (!budget) return toast.error('Please select a budget option');
         if (!group) return toast.error('Please select your travel group');
-
+        
+        setLoading(true);
         try {
             toast.loading('Generating your travel plan...');
 
@@ -50,6 +52,8 @@ export default function CreateTripPage() {
             const errMsg = error.response?.data?.error || error.message || 'Unknown error';
             console.error('Failed to fetch travel plan:', errMsg);
             toast.error('Failed to fetch travel plan. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -135,7 +139,11 @@ export default function CreateTripPage() {
                     onClick={getTravelPlan}
                     className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-900 transition"
                 >
-                    Generate Trip
+                    {loading ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                        'Generate Trip'
+                    )}
                 </button>
             </div>
         </div>
