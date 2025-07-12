@@ -54,6 +54,27 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === 'google') {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email! },
+        });
+  
+        // If user doesn't exist in DB, create it manually
+        if (!existingUser) {
+          await prisma.user.create({
+            data: {
+              name: user.name,
+              email: user.email,
+              image: user.image,
+              // You can leave password null for OAuth users
+            },
+          });
+        }
+      }
+  
+      return true; // allow sign-in
+    },
     async jwt({ token, user }) {
       if (user) token.id = user.id;
       return token;
