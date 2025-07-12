@@ -119,7 +119,7 @@ export default function ItineraryDay({
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.placeName)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-col items-center justify-center text-orange-500 hover:underline text-sm"
+                  className="flex flex-col items-center justify-center text-orange-500 hover:underline text-sm text-center"
                 >
                   <img className="w-10 h-10"src="/map.png" alt="" />
                   View on Map
