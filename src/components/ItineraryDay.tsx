@@ -121,7 +121,7 @@ export default function ItineraryDay({
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-orange-500 hover:underline text-sm"
                 >
-                  <img src="/map.png" alt="" />
+                  <img className="w-5 h-5"src="/map.png" alt="" />
                   View on Map
                 </a>
               </div>
