@@ -35,7 +35,7 @@ export default function Navbar() {
           <div className="flex items-center gap-6 relative">
             <Link
               href="/my-trip"
-              className="text-white font-medium border-[2px] border-white/85 hover:border-orange-400 px-2 py-1 rounded-full hover:text-orange-400 transition"
+              className="text-white/75 font-medium border-[2px] border-white/75 hover:border-orange-400 px-2 py-1 rounded-full hover:text-orange-400 transition"
             >
               My Trips
             </Link>
@@ -44,7 +44,7 @@ export default function Navbar() {
               <img
                 src={session.user?.image || '/user.png'}
                 alt="user"
-                className="w-12 h-12 p-1 rounded-full border-[2px] border-orange-500 cursor-pointer"
+                className="w-10 h-10 rounded-full border-[2px] border-orange-500 cursor-pointer"
                 onClick={toggleDropdown}
               />
 
