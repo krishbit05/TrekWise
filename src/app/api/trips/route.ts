@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { destination, days, budget, group } = body;
+  const { destination, days, budget, group, rating } = body;
 
   if (!destination || !days || !budget || !group) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
         days: Number(days),
         budget,
         group,
+        rating: rating ?? null, // if provided, else null
         userId: user.id,
         // @ts-ignore
         data: parsed as Prisma.InputJsonValue,
