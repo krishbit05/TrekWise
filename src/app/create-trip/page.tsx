@@ -44,7 +44,7 @@ export default function CreateTripPage() {
 
             toast.dismiss();
             toast.success('Travel plan generated successfully!');
-            router.push('/view-trip');
+            router.push(`/view-trip/${travelData.id}`);
 
             return travelData;
         } catch (error: any) {

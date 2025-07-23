@@ -22,17 +22,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${poppins.className} text-black`}>
         <div
-          className="fixed inset-0 -z-10 bg-no-repeat bg-cover bg-center brightness-[0.5]"
+          className="fixed inset-0 -z-10 bg-no-repeat bg-cover bg-center brightness-[0.5] animate-[zoomFadeIn_1.5s_ease-out_forwards]"
           style={{
             backgroundImage: "url('/bg.png')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
             willChange: 'transform',
             WebkitBackfaceVisibility: 'hidden',
             backfaceVisibility: 'hidden',
           }}
         />
+
         <ClientLayout>
           <Navbar />
           <Toaster position="top-center" reverseOrder={false} />

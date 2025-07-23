@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
 
 import TripInformation from '@/components/TripInformation';
 import HotelList from '@/components/HotelList';
@@ -28,14 +29,18 @@ type DayPlan = {
 };
 
 type Itinerary = DayPlan[];
+
 export default function ViewTripPage() {
     const { data: session, status } = useSession();
+    const params = useParams();
+    const tripId = params?.id as string;
+
     const [trip, setTrip] = useState<any | null>(null);
 
     useEffect(() => {
         const fetchTrip = async () => {
             try {
-                const res = await fetch('/api/trips/latest');
+                const res = await fetch(`/api/trips/latest/${tripId}`);
                 if (res.ok) {
                     const data = await res.json();
                     setTrip(data.data);
@@ -48,13 +53,13 @@ export default function ViewTripPage() {
             }
         };
 
-        if (status === 'authenticated') fetchTrip();
-    }, [status]);
+        if (status === 'authenticated' && tripId) {
+            fetchTrip();
+        }
+    }, [status, tripId]);
 
     if (!trip) {
-        return (
-            <TripSkeleton />
-        );
+        return <TripSkeleton />;
     }
 
     return (
