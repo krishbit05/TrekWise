@@ -35,6 +35,7 @@ export default function CreateTripPage() {
                 days,
                 budget,
                 group,
+                rating: null
             });
 
             const travelData = response.data?.data;
