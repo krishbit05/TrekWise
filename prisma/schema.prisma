@@ -27,4 +27,5 @@ model Trip {
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   data        Json 
+  rating      Int
 }

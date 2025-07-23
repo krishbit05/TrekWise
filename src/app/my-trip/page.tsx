@@ -4,6 +4,8 @@ import { authOptions } from '../api/auth/[...nextauth]/route';
 import { PrismaClient } from '@prisma/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import TripRatingStars from '@/components/TripRatingStars';
+
 
 const prisma = new PrismaClient();
 
@@ -92,8 +94,10 @@ export default async function ViewTripPage() {
                                 <p className="text-sm text-black">
                                     {trip.days} Days trip with {trip.budget} Budget
                                 </p>
+                                <TripRatingStars tripId={trip.id} initialRating={trip.rating} />
                             </div>
                         </Link>
+                        
                     ))}
 
                 </div>
