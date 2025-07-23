@@ -37,8 +37,8 @@ export async function GET(
     if (!trip) {
       return NextResponse.json({ error: 'Trip not found' }, { status: 404 });
     }
-
-    return NextResponse.json({ success: true, data: trip});
+    // @ts-ignore
+    return NextResponse.json({ success: true, data: trip.data});
   } catch (err: any) {
     console.error('[TRIP_LATEST_ID_GET_ERROR]', err);
     return NextResponse.json(
