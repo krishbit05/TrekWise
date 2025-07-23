@@ -28,4 +28,22 @@ html {
     background: #ff8800; 
   }
  
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url('/bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    animation: fadeInBg 0.5s ease-in-out forwards;
+    z-index: -10;
+  }
+  
+  @keyframes fadeInBg {
+    to {
+      opacity: 1;
+    }
+  }
 
