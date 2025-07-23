@@ -94,7 +94,7 @@ export default async function ViewTripPage() {
                                 <p className="text-sm text-black">
                                     {trip.days} Days trip with {trip.budget} Budget
                                 </p>
-                                <TripRatingStars tripId={trip.id} initialRating={trip.rating} />
+                                <TripRatingStars tripId={trip.id} initialRating={trip.rating ?? undefined} />
                             </div>
                         </Link>
                         
