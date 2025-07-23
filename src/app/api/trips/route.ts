@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { destination, days, budget, group,rating} = body;
+  const { destination, days, budget, group, rating } = body;
 
   if (!destination || !days || !budget || !group) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -24,9 +24,9 @@ export async function POST(req: NextRequest) {
     const prompt = `Generate Travel Plan for Location: ${destination}, for ${days} Days for ${group} with a ${budget} budget. Give me a Hotels options list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest itinerary with placeName, Place Details, Place Image Url, Geo Coordinates, ticket Pricing, rating, Time travel each of the location for ${days} days with each day plan with best time to visit in JSON format.`;
 
     const aiRaw = await generateTravelPlan(prompt);
-    const cleaned = aiRaw.replace(/^```json/, '').replace(/^```/, '').trim();
+    const cleaned = aiRaw.replace(/^```json/, '').replace(/```$/, '').trim();
 
-    let parsed;
+    let parsed: unknown;
     try {
       parsed = JSON.parse(cleaned);
     } catch (err) {
@@ -48,10 +48,9 @@ export async function POST(req: NextRequest) {
         days: Number(days),
         budget,
         group,
-        rating: rating ?? null,
         userId: user.id,
-        // @ts-ignore
-        data: parsed as Prisma.InputJsonValue,
+        data: parsed as Prisma.InputJsonValue, 
+        rating: rating ?? null,
       },
     });
 
