@@ -8,24 +8,58 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   name      String?
-  email     String?  @unique
+  email     String?   @unique
   password  String?
   image     String?
-  createdAt DateTime @default(now())
-  trips     Trip[]
+  createdAt DateTime  @default(now())
+
+  trips     Trip[]              @relation("TripOwner")
+  tripUsers TripUser[]          @relation("UserTrips")
+  messages  Message[]           @relation("UserMessages")
 }
 
 model Trip {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   destination String
   days        Int
   budget      String
   group       String
-  createdAt   DateTime @default(now())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  data        Json 
+  createdAt   DateTime   @default(now())
+  userId      String     // Creator's user ID
+
+  user        User       @relation("TripOwner", fields: [userId], references: [id])
+  users       TripUser[] @relation("UserTrips")
+  messages    Message[]  @relation("TripMessages")
+  data        Json
   rating      Int?
 }
+
+model TripUser {
+  id     String @id @default(cuid())
+  user   User   @relation("UserTrips", fields: [userId], references: [id])
+  userId String
+
+  trip   Trip   @relation("UserTrips", fields: [tripId], references: [id])
+  tripId String
+
+  role   String @default("member") // Optional: "admin", "viewer", etc.
+
+  @@unique([userId, tripId]) // A user can't join the same trip twice
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String?  // for text messages
+  imageUrl  String?  // for images or media
+  type      String   @default("text") // "text", "image", "location", "update"
+  createdAt DateTime @default(now())
+
+  user      User     @relation("UserMessages", fields: [userId], references: [id])
+  userId    String
+
+  trip      Trip     @relation("TripMessages", fields: [tripId], references: [id])
+  tripId    String
+}
+
