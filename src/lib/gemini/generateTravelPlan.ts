@@ -1,13 +1,25 @@
 import { GoogleGenAI } from '@google/genai';
 
-const model = 'gemini-2.5-pro';
+const model = 'gemini-1.5-flash'; // Free tier model with better quota limits
+const MAX_RETRIES = 3;
+const INITIAL_DELAY = 2000;
+
+async function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export async function generateTravelPlan(prompt: string): Promise<string> {
   const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY!,
   });
 
-  const contents = [
+  let lastError: any;
+
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      console.log(`[Attempt ${attempt + 1}/${MAX_RETRIES}] Generating travel plan...`);
+
+      const contents = [
     {
       role: 'user',
       parts: [
@@ -283,33 +295,59 @@ I'm now in the process of refining the JSON structure, particularly the itinerar
         },
       ],
     },
-    {
-      role: 'user',
-      parts: [
-        {
-          text: `INSERT_INPUT_HERE`,
-        },
-      ],
-    },
   ];
 
-  const response = await ai.models.generateContentStream({
-    model,
-    config: {
-      responseMimeType: 'application/json',
-    },
-    contents,
-  });
+      const response = await ai.models.generateContentStream({
+        model,
+        config: {
+          responseMimeType: 'application/json',
+        },
+        contents,
+      });
 
-  let finalText = '';
-  for await (const chunk of response) {
-    finalText += chunk.text;
+      let finalText = '';
+      for await (const chunk of response) {
+        finalText += chunk.text;
+      }
+
+      console.log('[Success] Travel plan generated successfully');
+
+      return finalText
+        .replace(/^```json/, '')
+        .replace(/^```/, '')
+        .trim();
+
+    } catch (error: any) {
+      lastError = error;
+      const errorCode = error?.status || error?.code;
+      const errorMessage = error?.message || String(error);
+
+      console.error(`[Attempt ${attempt + 1} Error]`, {
+        code: errorCode,
+        message: errorMessage,
+      });
+
+      if (errorCode === 429 || errorMessage.includes('quota') || errorMessage.includes('RESOURCE_EXHAUSTED')) {
+        if (attempt < MAX_RETRIES - 1) {
+          const delayMs = INITIAL_DELAY * Math.pow(2, attempt);
+          console.log(`[Quota Limited] Retrying in ${delayMs}ms...`);
+          await sleep(delayMs);
+          continue;
+        }
+      }
+
+      if (attempt < MAX_RETRIES - 1) {
+        const delayMs = INITIAL_DELAY * Math.pow(2, attempt);
+        console.log(`[Retry] Waiting ${delayMs}ms before next attempt...`);
+        await sleep(delayMs);
+        continue;
+      }
+    }
   }
 
-  // Sometimes, Gemini adds garbage like ```json ... ```
-  // Clean it safely
-  return finalText
-    .replace(/^```json/, '')
-    .replace(/^```/, '')
-    .trim();
+  console.error('[Fatal Error] Failed after all retries', lastError);
+  throw new Error(
+    `Failed to generate travel plan: ${lastError?.message || 'Unknown error'}. ` +
+    `Please check your API quota or try again later.`
+  );
 }

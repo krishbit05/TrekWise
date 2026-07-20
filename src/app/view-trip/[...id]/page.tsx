@@ -22,7 +22,8 @@ type Activity = {
     timeToSpend: string;
     travelTimeFromPrevious: string;
 };
-type DayPlan = {
+
+type DayPlan = {    
     day: number;
     theme: string;
     dailyPlan: Activity[];

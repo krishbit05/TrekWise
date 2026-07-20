@@ -50,7 +50,7 @@ export default function TripInformation({ tripDetails }: TripDetailsProps) {
   }, [imageUrl, location]);
 
   return (
-    <div className="mb-10 rounded-xl overflow-hidden shadow-xl bg-white">
+    <div className="mb-10 rounded-xl overflow-hidden shadow-xl bg-white min-w-[60%]">
       {/* Image with Overlay */}
       <div className="relative w-full h-64">
         <img
