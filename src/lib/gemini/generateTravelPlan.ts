@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 
-const model = 'gemini-1.5-flash'; // Free tier model with better quota limits
+const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 const MAX_RETRIES = 3;
 const INITIAL_DELAY = 2000;
 
