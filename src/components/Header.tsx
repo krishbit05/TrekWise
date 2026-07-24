@@ -1,6 +1,5 @@
-'use client';
-
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Header() {
   return (
@@ -26,9 +25,13 @@ export default function Header() {
         </Link>
       </div>
       <div className="relative overflow-hidden mt-40 mb-40 px-4">
-        <img
+        <Image
           src="/landing.png"
           alt="Trekwise Screenshot"
+          width={1600}
+          height={900}
+          priority
+          sizes="(max-width: 768px) 100vw, 1280px"
           className="w-full max-w-8xl drop-shadow-xl rounded-lg"
         />
       </div>

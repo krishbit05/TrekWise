@@ -1,32 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { data: session, status } = useSession();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 0);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   return (
     <nav
-      className={`w-full fixed top-0 z-50 transition-all bg-black/10 backdrop:blur-lg`}
+      className="w-full fixed top-0 z-50 transition-all bg-black/10 backdrop-blur-lg"
     >
       <div className="container mx-auto flex items-center justify-between px-10 py-3">
         <div className="flex items-center gap-2">
           <Link href="/" className="text-3xl text-orange-500 font-extrabold">
             Trek<span className="text-black">Wise</span>
           </Link>
-          <img className="w-8 h-8" src="/logo.png" alt="icon" />
+          <Image src="/logo.png" alt="icon" width={32} height={32} priority />
         </div>
 
         {status === 'loading' ? (

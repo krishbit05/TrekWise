@@ -22,12 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${poppins.className} text-black`}>
         <div
-          className="fixed inset-0 -z-10 bg-no-repeat bg-cover bg-center brightness-[0.5] animate-[zoomFadeIn_1.5s_ease-out_forwards]"
+          className="fixed inset-0 -z-10 bg-no-repeat bg-cover bg-center brightness-[0.55]"
           style={{
             backgroundImage: "url('/bg.png')",
-            willChange: 'transform',
-            WebkitBackfaceVisibility: 'hidden',
-            backfaceVisibility: 'hidden',
           }}
         />
 
