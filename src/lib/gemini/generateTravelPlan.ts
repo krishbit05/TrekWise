@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 
-const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 const MAX_RETRIES = 3;
 const INITIAL_DELAY = 2000;
 
@@ -346,8 +346,21 @@ I'm now in the process of refining the JSON structure, particularly the itinerar
   }
 
   console.error('[Fatal Error] Failed after all retries', lastError);
+  const errorCode = lastError?.status || lastError?.code;
+  const errorMessage = lastError?.message || 'Unknown error';
+
+  if (
+    errorCode === 429 ||
+    String(errorMessage).includes('quota') ||
+    String(errorMessage).includes('RESOURCE_EXHAUSTED')
+  ) {
+    throw new Error(
+      `Gemini quota is exhausted for model "${model}". Create a Gemini API key for a project with active free-tier quota, or enable billing for the project, then set GEMINI_API_KEY and optionally GEMINI_MODEL.`
+    );
+  }
+
   throw new Error(
-    `Failed to generate travel plan: ${lastError?.message || 'Unknown error'}. ` +
+    `Failed to generate travel plan: ${errorMessage}. ` +
     `Please check your API quota or try again later.`
   );
 }

@@ -57,6 +57,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, data: newTrip });
   } catch (err: any) {
     console.error('[TRIP_POST_ERROR]', err);
-    return NextResponse.json({ error: err.message || 'Something went wrong' }, { status: 500 });
+    const message = err?.message || 'Something went wrong';
+    const status = String(message).includes('quota is exhausted') ? 429 : 500;
+
+    return NextResponse.json({ error: message }, { status });
   }
 }
